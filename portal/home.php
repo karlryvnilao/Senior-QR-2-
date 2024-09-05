@@ -10,7 +10,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['national_id'])) {
 
     $resident_id = $_SESSION['id'];
     
-    // Use a prepared statement to prevent SQL injection
+    // Fetch resident information
     $stmt = $conn->prepare("SELECT tblresident.*, tblpurok.name 
                             FROM tblresident 
                             INNER JOIN tblpurok ON tblresident.purok = tblpurok.id 
@@ -26,8 +26,22 @@ if (isset($_SESSION['id']) && isset($_SESSION['national_id'])) {
         $resident = null;
         $fullName = "No data available";
     }
+    
+    // Fetch beneficiary information
+    $beneficiary_stmt = $conn->prepare("SELECT * FROM tblbenificiary WHERE resident_id = ?");
+    $beneficiary_stmt->bind_param("i", $resident_id);
+    $beneficiary_stmt->execute();
+    $beneficiary_result = $beneficiary_stmt->get_result();
+
+    $beneficiaries = [];
+    if ($beneficiary_result && $beneficiary_result->num_rows > 0) {
+        while ($row = $beneficiary_result->fetch_assoc()) {
+            $beneficiaries[] = $row;
+        }
+    }
 
     $stmt->close();
+    $beneficiary_stmt->close();
     mysqli_close($conn);
 ?>
 <!DOCTYPE html>
@@ -49,7 +63,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['national_id'])) {
 
     .grid-container {
         display: grid;
-        grid-template-columns: 20% 40% 20% 20%; /* Column widths */
+        grid-template-columns: 30% 40% 30%; /* Column widths */
     }
 
     .grid-item {
@@ -163,10 +177,6 @@ img.img-fluid {
                                         <div class="grid-item">
                                         <img src="<?= preg_match('/data:image/i', $resident['qrimage']) ? $resident['qrimage'] : '../assets/img/qrcode/'.$resident['qrimage'] ?>" alt="Resident Profile" class="img-fluid">
                                         </div>
-                                        <div class="grid-item">
-                                            <button type="button" class="btn btn-primary">Beneficiary</button>
-                                            <button type="button" class="btn btn-secondary">Pension Status</button>
-                                        </div>
                                     </div>
                                     <!-- Insert the two-column layout with a dividing line -->
                                     <div class="two-column">
@@ -180,11 +190,18 @@ img.img-fluid {
                                         </div>
                                         <div class="grid-item">
                                             <h5><b>Person to Contact Incase of Emergency</b></h5>
-                                            <p>Fullname</p>
-                                            <p>Number</p>
-                                            <p>Email</p>
-                                            <p>Address</p>
-                                            <p>Relationship</p>
+                                            <?php if (!empty($beneficiaries)): ?>
+                                                <?php foreach ($beneficiaries as $beneficiary): ?>
+                                                    <p>Name: <?= htmlspecialchars($beneficiary['fullname']) ?></p>
+                                                    <p>Relationship: <?= htmlspecialchars($beneficiary['relationship']) ?></p>
+                                                    <p>Contact Number: <?= htmlspecialchars($beneficiary['phone']) ?></p>
+                                                    <p>Email: <?= htmlspecialchars($beneficiary['email']) ?></p>
+                                                    <p>Address: <?= htmlspecialchars($beneficiary['address']) ?></p>
+                                                    
+                                                <?php endforeach; ?>
+                                            <?php else: ?>
+                                                <p>No beneficiaries available.</p>
+                                            <?php endif; ?>
                                         </div>
                                     </div>
                                 </div>
@@ -229,26 +246,6 @@ img.img-fluid {
     }
 });
 
-// Update pension status
-function updatePensionStatus() {
-    var status = document.getElementById("pensionStatus").value;
-    var residentId = document.getElementById("residentId").value;
-    var statusMessage = document.getElementById("statusMessage");
-
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", "update_pension_status.php", true);
-    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === XMLHttpRequest.DONE) {
-            if (xhr.status === 200) {
-                statusMessage.innerHTML = "<p>Status updated successfully.</p>";
-            } else {
-                statusMessage.innerHTML = "<p>Failed to update status. Please try again.</p>";
-            }
-        }
-    };
-    xhr.send("pensionStatus=" + status + "&residentId=" + residentId);
-}
 
 
     </script>

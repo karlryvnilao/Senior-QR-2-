@@ -1,7 +1,7 @@
 <footer class="footer">
     <div class="container-fluid">
         <div class="copyright ml-auto">
-            2021 &copy Barangay Management System
+            2024 &copy Senior Citizen Management System
         </div>				
     </div>
 </footer>

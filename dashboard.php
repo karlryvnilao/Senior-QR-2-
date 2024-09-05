@@ -16,15 +16,6 @@
 	$query5 = "SELECT * FROM tblpurok";
 	$purok = $conn->query($query5)->num_rows;
 
-	$query6 = "SELECT * FROM tblprecinct";
-	$precinct = $conn->query($query6)->num_rows;
-
-	$query7 = "SELECT * FROM tblblotter";
-	$blotter = $conn->query($query7)->num_rows;
-
-	$date = date('Y-m-d'); 
-	$query8 = "SELECT SUM(amounts) as am FROM tblpayments WHERE `date`='$date'";
-	$revenue = $conn->query($query8)->fetch_assoc();
 ?>
 
 <!DOCTYPE html>
@@ -34,7 +25,6 @@
 	<title>Dashboard -  Barangay Management System</title>
 </head>
 <body>
-	<?php include 'templates/loading_screen.php' ?>
 
 	<div class="wrapper">
 		<!-- Main Header -->
