@@ -12,12 +12,13 @@ while($row = $genderResult->fetch_assoc()) {
     $genderCounts[] = $row['count'];
 }
 
-// Query to get Purok distribution from tblresident with join on tblpurok
+// Query to get Purok distribution from tblresident with a LEFT JOIN on tblpurok
 $purokQuery = "SELECT tblpurok.name, COUNT(tblresident.id) as count 
-               FROM tblresident 
-               JOIN tblpurok ON tblresident.purok = tblpurok.id 
+               FROM tblpurok 
+               LEFT JOIN tblresident ON tblpurok.id = tblresident.purok 
                GROUP BY tblpurok.name";
 $purokResult = $conn->query($purokQuery);
+
 
 $puroks = [];
 $purokCounts = [];
@@ -71,7 +72,7 @@ while($row = $purokResult->fetch_assoc()) {
                         <div class="col-md-6">
                             <div class="card">
                                 <div class="card-header">
-                                    <h4 class="card-title">Baranggay's</h4>
+                                    <h4 class="card-title">Purok Distribution</h4>
                                 </div>
                                 <div class="card-body">
                                     <canvas id="purokPieChart"></canvas>
@@ -123,25 +124,62 @@ while($row = $purokResult->fetch_assoc()) {
         });
 
 
-        // Purok Pie Chart
         const purokLabels = <?php echo json_encode($puroks); ?>;
-        const purokData = <?php echo json_encode($purokCounts); ?>;
-        const purokPieCtx = document.getElementById('purokPieChart').getContext('2d');
-        new Chart(purokPieCtx, {
-            type: 'pie',
-            data: {
-                labels: purokLabels,
-                datasets: [{
-                    data: purokData,
-                    backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 206, 86, 0.2)', 'rgba(75, 192, 192, 0.2)', 'rgba(153, 102, 255, 0.2)'],
-                    borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)', 'rgba(75, 192, 192, 1)', 'rgba(153, 102, 255, 1)'],
-                    borderWidth: 1
-                }]
+const purokData = <?php echo json_encode($purokCounts); ?>;
+const purokPieCtx = document.getElementById('purokPieChart').getContext('2d');
+
+// Log the purok labels and data to the console
+console.log('Purok Labels:', purokLabels);
+console.log('Purok Data:', purokData);
+
+// Predefined color palette - ensure it has enough colors
+const predefinedColors = [
+    '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF',
+    '#FF9F40', '#FF5733', '#C70039', '#900C3F', '#581845',
+    '#FFC300', '#DAF7A6', '#FF6F61', '#6A5ACD', '#FFB6C1',
+    '#FFA07A', '#20B2AA', '#87CEFA', '#DDA0DD', '#F08080',
+    '#778899', '#FFA500', '#008000', '#0000FF', '#800080',
+    '#FFC0CB', '#FFD700', '#808080', '#00FFFF', '#FF4500',
+];
+
+// Ensure enough unique colors for each purok
+const purokColors = [];
+for (let i = 0; i < purokLabels.length; i++) {
+    purokColors.push(predefinedColors[i % predefinedColors.length]);
+}
+
+// Log the assigned colors for debugging
+console.log('Purok Colors:', purokColors);
+
+new Chart(purokPieCtx, {
+    type: 'pie',
+    data: {
+        labels: purokLabels,
+        datasets: [{
+            label: 'Number of Residents',
+            data: purokData,
+            backgroundColor: purokColors,
+            borderColor: '#fff',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'top',
             },
-            options: {
-                responsive: true
+            tooltip: {
+                callbacks: {
+                    label: function(tooltipItem) {
+                        return `${tooltipItem.label}: ${tooltipItem.raw}`;
+                    }
+                }
             }
-        });
+        }
+    }
+});
+
     </script>
 </body>
 </html>
