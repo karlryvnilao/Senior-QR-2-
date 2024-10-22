@@ -24,6 +24,20 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js">
     </script>
 </head>
+<style>
+    /* Remove the arrow (spinner) for Chrome, Safari, and Edge */
+    input[type=number]::-webkit-inner-spin-button, 
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    /* Remove the arrow for Firefox */
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+</style>
+</style>
 <body>
 <?php include 'templates/loading_screen.php' ?>
 	<div class="wrapper">
@@ -330,7 +344,7 @@
                                         <div class="col">
                                             <div class="form-group">
                                                 <label>Number</label>
-                                                <input type="number" class="form-control" placeholder="Enter Number" name="ben_number" required>
+                                                <input type="number" class="form-control no-arrow" placeholder="Enter Number" name="ben_number" required>
                                             </div>
                                         </div>
                                         <div class="col">
