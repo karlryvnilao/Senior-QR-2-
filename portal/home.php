@@ -176,7 +176,6 @@ img.img-fluid {
                                         </div>
                                         <div class="grid-item">
                                         <img src="<?= preg_match('/data:image/i', $resident['qrimage']) ? $resident['qrimage'] : '../assets/img/qrcode/'.$resident['qrimage'] ?>" alt="Resident Profile" class="img-fluid">
-                                        <p><em>Claim your pensions every end of the month!</em></p>
                                         </div>
                                     </div>
                                     <!-- Insert the two-column layout with a dividing line -->
@@ -206,13 +205,12 @@ img.img-fluid {
                                         </div>
                                     </div>
                                 </div>
-                                <a href="logout.php" class="nav__link nav__logout">
+						</div>
+
+                        <a href="logout.php" class="nav__link nav__logout">
                    <i class='bx bx-log-out nav__icon'></i>
                     <span class="nav__name" id="log_out">Logout</a></span>
                 </a>
-						</div>
-
-                        
 					
     <script>
          function printDiv(divName) {

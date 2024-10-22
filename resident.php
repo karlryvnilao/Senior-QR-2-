@@ -196,8 +196,8 @@
                                         <input type="file" class="form-control" name="img" accept="image/*">
                                     </div>
                                     <div class="form-group">
-                                        <label>Senior ID No.</label>
-                                        <input type="text" class="form-control" name="national" placeholder="Enter Senior ID No." required>
+                                        <label>National ID No.</label>
+                                        <input type="text" class="form-control" name="national" placeholder="Enter National ID No." required>
                                     </div>
                                     <div class="form-group">
                                         <label>Monthly Pension</label>
@@ -309,10 +309,10 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- <div class="form-group">
+                                    <div class="form-group">
                                         <label>Address</label>
                                         <textarea class="form-control" name="address" required placeholder="Enter Address"></textarea>
-                                    </div> -->
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -407,8 +407,8 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label>Senior ID No.</label>
-                                        <input type="text" class="form-control" name="national" id="nat_id" placeholder="Enter Senior ID No.">
+                                        <label>National ID No.</label>
+                                        <input type="text" class="form-control" name="national" id="nat_id" placeholder="Enter National ID No.">
                                     </div>
                                     <div class="form-group">
                                         <label>Monthly Pension</label>

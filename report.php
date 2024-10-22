@@ -91,15 +91,9 @@ while($row = $purokResult->fetch_assoc()) {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         // Gender Bar Chart
-        // Gender Bar Chart
         const genderLabels = <?php echo json_encode($genders); ?>;
         const genderData = <?php echo json_encode($genderCounts); ?>;
         const genderBarCtx = document.getElementById('genderBarChart').getContext('2d');
-
-        // Assign specific colors based on gender
-        const genderColors = genderLabels.map(label => label === 'Female' ? 'rgba(255, 182, 193, 0.6)' : 'rgba(75, 192, 192, 0.2)'); // Pink for Female, Teal for others
-        const genderBorderColors = genderLabels.map(label => label === 'Female' ? 'rgba(255, 105, 180, 1)' : 'rgba(75, 192, 192, 1)'); // Dark pink border for Female, Teal for others
-
         new Chart(genderBarCtx, {
             type: 'bar',
             data: {
@@ -107,8 +101,8 @@ while($row = $purokResult->fetch_assoc()) {
                 datasets: [{
                     label: 'Number of Residents',
                     data: genderData,
-                    backgroundColor: genderColors,
-                    borderColor: genderBorderColors,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
                     borderWidth: 1
                 }]
             },
@@ -121,7 +115,6 @@ while($row = $purokResult->fetch_assoc()) {
                 }
             }
         });
-
 
         // Purok Pie Chart
         const purokLabels = <?php echo json_encode($puroks); ?>;
